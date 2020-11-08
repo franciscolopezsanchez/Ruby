@@ -92,3 +92,111 @@ puts some_lambda.call("Paco", 145)
 puts some_lambda.call("Paco")
 # ERROR: wrong number of arguments
 ```
+
+## Classes
+
+```ruby
+puts "Hello class".class # String
+puts 5.class # Fixnum
+puts [1,2,3].class # Array
+puts Hash.new(0).class # Hash
+puts true.class # TrueClass
+puts false.class # FalseClass
+puts nil.class # NilClass
+puts (0..9).class # Range
+puts /*.class # Regexp
+puts Proc.new {}.class # Proc
+puts lambda {}.class # Proc
+puts Time.new.class # Time
+```
+
+### Classes and superclasses
+
+- The object class itself is another class
+- The **superclass** is the class that a current class inherits from.
+
+```ruby
+class.superclass
+```
+
+```ruby
+puts 5.class # Fixnum
+puts 5.class.superclass # Integer
+puts 5.class.superclass.superclass # Numeric
+puts 5.class.superclass.superclass.superclass # Object
+puts 5.class.superclass.superclass.superclass.superclass # BasicObject
+```
+
+- BasicObject is the class at the top of the hierarchy
+- **.ancestors** give a list of all classes and models that an object inherits from in order of inheritance.
+
+```ruby
+p 5.class.ancestors
+# [Fixnum, Integer, Numeric, Comparable, Object, Kernel, BasicObject]
+```
+
+- **.methods** will give back an array of all available methods on that object
+
+- **.instance_variables** will give back an array of all instance variables of an object
+
+- Protected method can be accessed by other objects of the same class family
+
+```ruby
+class Car
+    def initialize(value)
+        @value = value
+    end
+
+    def compare_car_with(car)
+        self.value > car.value ? true : false
+    end
+
+    protected
+
+    def value
+        @value
+    end
+end
+
+civic = Car.new(20000)
+fiat = Car.new(30000)
+
+civic.compare_car_with(fiat) # false
+puts
+```
+
+- Class variables are written with **@@** and they will be accessible by all instances of that class
+
+- Class methods are prefixed with **self.** and they will be accessible by all instances of that class
+
+```ruby
+class Bike
+    @@maker = "bycicle"
+    @@count = 0
+
+    def self.count
+        @@count
+    end
+end
+
+puts Bike.count
+# 0
+```
+
+## Struct
+
+- A Struct is a convenient way to bundle a number of attributes together, using accessor methods, without having to write an explicit class.
+
+- It is a lightweight representation of data.
+
+```ruby
+Customer = Struct.new(:name, :address) do
+  def greeting
+    "Hello #{name}!"
+  end
+end
+
+dave = Customer.new("Dave", "123 Main")
+dave.name     #=> "Dave"
+dave.greeting #=> "Hello Dave!"
+```
